@@ -1,0 +1,14 @@
+//from file 1
+val intenttext = display.text
+        pass.setOnClickListener {
+            startActivity(Intent(this,MainActivity2::class.java)
+                .putExtra("value",intenttext)
+
+
+            )
+        }
+
+//from file 2
+text = findViewById(R.id.text)
+        val result = intent.getStringExtra("value")
+        text.text = result
