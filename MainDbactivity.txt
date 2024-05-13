@@ -1,0 +1,50 @@
+package com.example.helloworld
+
+import android.content.ContentValues
+import android.os.Bundle
+import android.widget.Button
+import android.widget.EditText
+import androidx.activity.enableEdgeToEdge
+import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.contentValuesOf
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
+
+class MainActivity : AppCompatActivity() {
+
+    private lateinit var dbhelper:MyDbHelper
+    private lateinit var age:EditText
+    private lateinit var name:EditText
+    private lateinit var insert:Button
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        enableEdgeToEdge()
+        setContentView(R.layout.activity_main)
+        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
+            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
+            insets
+        }
+        dbhelper = MyDbHelper(this)
+        age=findViewById(R.id.age)
+        name=findViewById(R.id.name)
+        insert =findViewById(R.id.insert)
+
+        insert.setOnClickListener {
+            val name = name.text.toString()
+            val age = age.text.toString().toIntOrNull() ?: 0
+            insertOnclick(name, age)
+        }
+    }
+
+    private fun insertOnclick(name:String,age:Int){
+        val db =dbhelper.writableDatabase
+        val values = ContentValues().apply {
+            put(MyDbHelper.COLUMN_NAME_NAME,name)
+            put(MyDbHelper.COLUMN_NAME_AGE,age)
+        }
+        val newRowId = db?.insert(MyDbHelper.TABLE_NAME, null, values)
+        db?.close()
+
+    }
+}
